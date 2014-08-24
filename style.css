@@ -1,0 +1,32 @@
+.blockify-store {
+    padding: 0;
+    background: #e5e5e5;
+    text-align: center;
+}
+
+
+.blockify-store .container {
+
+}
+
+.blockify-store > div > h1,
+.blockify-store > div > h5 {
+    margin: 0 0 16px;
+}
+
+.blockify-store > div > h4 {
+    opacity: 0.8;
+}
+
+.blockify-store .row {
+    margin-top: 10px;
+    text-align: left;
+}
+
+.cartList .totalrow{
+    margin-top: 20px;
+}
+
+.dotblock{
+    padding-top: 3%;
+}

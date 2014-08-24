@@ -1,0 +1,51 @@
+{
+	"name": "blockify-store",
+    "Author": "developersteve",
+    "version": "0.1.0",
+	"template": {
+        "@type": "Thing",
+        "currency": "$",
+        "name": "Products",
+        "@list": {
+            "@type": "Thing",
+            "@value": [
+                {
+                  "@type": "Thing",
+                  "image": "holder.js/185x185",
+                  "name": "Product",
+                  "description": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
+                  "price": 1.00,
+                  "sku": "sku101",
+                  "button": "Add to Cart"
+                },
+                {
+                  "@type": "Thing",
+                  "image": "holder.js/185x185",
+                  "name": "Product 2",
+                  "description": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
+                  "price": 2.00,
+                  "sku": "sku102",
+                  "button": "Add to Cart"
+                },
+                {
+                  "@type": "Thing",
+                  "image": "holder.js/185x185",
+                  "name": "Product 3",
+                  "description": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
+                  "price": 3.00,
+                  "sku": "sku103",
+                  "button": "Add to Cart"
+                },
+                {
+                  "@type": "Thing",
+                  "image": "holder.js/185x185",
+                  "name": "Product 4",
+                  "description": "Lorem ipsum dolor sit amet, consectetur adipisicing.",
+                  "price": 4.00,
+                  "sku": "sku104",
+                  "button": "Add to Cart"
+                }
+            ]
+        }
+	}
+}
