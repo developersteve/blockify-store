@@ -1,4 +1,4 @@
-blockify-modal
+blockify-store
 ==============
 
 
