@@ -1,5 +1,5 @@
 <?php
-class Session
+class Store
 {
     const SESSION_STARTED = TRUE;
     const SESSION_NOT_STARTED = FALSE;

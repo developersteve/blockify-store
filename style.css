@@ -30,3 +30,9 @@
 .dotblock{
     padding-top: 3%;
 }
+
+.modal-footer .PayPal{
+    background: none;
+    border: none;
+    box-shadow: none;
+}

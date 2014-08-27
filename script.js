@@ -15,6 +15,34 @@
             }, timer);
     }
 
+    $(".PayPal").click(function(){
+
+        var loc = window.location.href;
+
+        var message = "type=PayPal";
+
+        $.ajax({
+            url : loc,
+            type: "POST",
+            dataType: "json",
+            headers: {
+                blockName: "blockify-store",
+            },
+            data : message,
+            success: function(data)
+            {
+                if(data.ACK=="Success"){
+                    window.location = data.redirect;
+                }else{
+                    console.log(data);
+                    alert("An Error has occured");
+                }
+
+            }
+
+        });
+    });
+
     $(".cartbutton").click(function() {
 
         var loc = window.location.href;

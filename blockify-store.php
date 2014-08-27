@@ -1,21 +1,106 @@
 <?php
+
 if($_POST){
 
   if($_POST['type']=='list'){
-    $data = Session::getInstance();
+    $data = Store::getInstance();
     echo json_encode($data->cart);
   }
+  elseif($_POST['type']=='PayPal'){
+
+    $data = Store::getInstance();
+
+    require('pay-methods/paypal.php');
+
+    $config = array(
+      "environment" => $block->document['PayPal']['environment'], # or live
+      "user"  => $block->document['PayPal']['user'],
+      "pwd"  => $block->document['PayPal']['pwd'],
+      "signature"  => $block->document['PayPal']['signature'],
+      "version"  => $block->document['PayPal']['version']
+    );
+
+    $paypal = new PayPal($config);
+
+    $cartCall = array(
+      "method"  => "SetExpressCheckout",
+      "paymentrequest_0_paymentaction" => "sale",
+      "paymentrequest_0_amt"  => number_format($data->cart['cartValue'], 2, '.', ''),
+      "paymentrequest_0_currencycode"  => $block->document['PayPal']['currency'],
+      "paymentrequest_0_itemamt" => number_format($data->cart['cartValue'], 2, '.', ''),
+      "returnurl"  => $paypal->getUrl(1),
+      "cancelurl"  => $paypal->getUrl(1),
+    );
+
+   foreach($data->cart['cartData'] as $key => $cart ){
+      $cartCall['l_paymentrequest_0_name'.$key] = $cart['name'];
+      $cartCall['l_paymentrequest_0_qty'.$key] = 1;
+      $cartCall['l_paymentrequest_0_amt'.$key] = $cart['value'];
+    }
+
+    $result = $paypal->call($cartCall);
+
+    if($result['ACK'] == 'Success'){
+      $result['redirect'] = $paypal->redirect($result);
+    }
+
+    echo json_encode($result);
+
+  }
   else{
-    $data = Session::getInstance();
+    $data = Store::getInstance();
     $data->cart('cart', $_POST);
 
     echo $data->cart['cartValue'];
   }
 
-}else{
+}
+elseif($_GET['token'] and $_GET['PayerID']){
   $block->open();
 
-  $data = Session::getInstance();
+  $data = Store::getInstance();
+
+  require('pay-methods/paypal.php');
+
+  $config = array(
+    "environment" => $block->document['PayPal']['environment'], # or live
+    "user"  => $block->document['PayPal']['user'],
+    "pwd"  => $block->document['PayPal']['pwd'],
+    "signature"  => $block->document['PayPal']['signature'],
+    "version"  => $block->document['PayPal']['version']
+  );
+
+  $paypal = new PayPal($config);
+
+  $result = $paypal->call(array(
+    "paymentrequest_0_amt"  => number_format($data->cart['cartValue'], 2, '.', ''),
+    "method"  => 'DoExpressCheckoutPayment',
+    "token"  => $_GET['token'],
+    "payerid"  => $_GET['PayerID'],
+  ));
+
+  if($result['ACK']=="Success"){
+    echo "<h3>Thank you</h3>";
+    echo "<h4>Your order has been placed</h4>";
+
+    echo "<p>Order number: ".$result['PAYMENTINFO_0_TRANSACTIONID']."</p>";
+
+    $data->destroy();
+
+  }
+  else{
+    echo "<h3>".$result['L_LONGMESSAGE0']."</h3>";
+  }
+
+  echo "<h5><a href='".$paypal->getUrl(1)."'>Click here to return to the store</a></h5>";
+
+  $block->close();
+}else{
+
+  $block->open();
+
+  $data = Store::getInstance();
+
   ?>
   <div class="row">
 
@@ -55,7 +140,17 @@ if($_POST){
               </div>
               <div class="modal-footer">
                 <button type="button" data-dismiss="modal" class="btn btn-success">Keep Shopping</button>
-                <button type="button" class="btn btn-danger">Check out</button>
+                <?php
+                if($block->document['PayPal'])
+                {
+                  // echo "<a href='#'><img src='https://www.paypal.com/en_US/i/btn/btn_xpressCheckout.gif' class='img-responsive center-block'></a>";
+                  echo "<button type='button' class='btn PayPal'><img src='https://www.paypal.com/en_US/i/btn/btn_xpressCheckout.gif' class='img-responsive center-block'></button>";
+                }
+                else
+                { ?>
+                  <button type="button" class="btn btn-danger">Check out</button>
+                <?php }; ?>
+
               </div>
           </div>
         </div>
